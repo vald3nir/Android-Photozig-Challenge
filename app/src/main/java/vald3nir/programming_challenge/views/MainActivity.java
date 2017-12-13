@@ -3,7 +3,6 @@ package vald3nir.programming_challenge.views;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -36,9 +35,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Bean
     MultimediaAdpter adpter;
 
-    static DataAssets dataAssets;
-
-    static String folder = "";
+    DataAssets dataAssets;
 
     @ViewById
     ListView multimediaListview;
@@ -53,7 +50,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 .addConverterFactory(GsonConverterFactory.create()).build()
                 .create(RetrofitServices.class);
 
-        this.folder =  Environment.getExternalStorageDirectory().getPath(); //"/sdcard/" + getString(R.string.app_name);
     }
 
     @AfterViews
@@ -66,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onResponse(Call<DataAssets> call, Response<DataAssets> response) {
                 dataAssets = response.body();
-                adpter.bind(dataAssets.getMultimedia());
+                adpter.bind(dataAssets.getAssetsLocation(), dataAssets.getMultimedia());
             }
 
             @Override
@@ -90,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 .setPositiveButton("Go to next page", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
-                        MultimediaActivity_.intent(MainActivity.this).multimedia(multimedia).start();
+                        MultimediaActivity_.intent(MainActivity.this).multimedia(multimedia).baseUrl(dataAssets.getAssetsLocation()).start();
                     }
                 })
                 .setNegativeButton("Donwload Video", new DialogInterface.OnClickListener() {
@@ -105,8 +101,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void runDownloadMultimedia(Multimedia multimedia) {
-        final VideoDownloader downloadTask = new VideoDownloader(this, multimedia.getVideo());
-        downloadTask.execute(dataAssets.getAssetsLocation() + "/" + multimedia.getVideo());
+        final VideoDownloader videoDownloader = new VideoDownloader(this, multimedia.getVideo());
+        videoDownloader.execute(dataAssets.getAssetsLocation() + "/" + multimedia.getVideo());
     }
 
 

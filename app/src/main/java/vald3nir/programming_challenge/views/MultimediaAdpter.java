@@ -21,12 +21,14 @@ import vald3nir.programming_challenge.models.Multimedia;
 public class MultimediaAdpter extends BaseAdapter {
 
     private ArrayList<Multimedia> multimedias = new ArrayList<>();
+    private String baseURL;
 
     @RootContext
     public Context context;
 
-    public void bind(Collection<Multimedia> multimedias) {
+    public void bind(String baseURL, Collection<Multimedia> multimedias) {
         this.multimedias = new ArrayList<>(multimedias);
+        this.baseURL = baseURL;
         notifyDataSetChanged();
     }
 
@@ -48,7 +50,7 @@ public class MultimediaAdpter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         MultimediaItemView itemView = MultimediaItemView_.build(context);
-        itemView.bind(getItem(position));
+        itemView.bind(baseURL, getItem(position));
         return itemView;
     }
 }

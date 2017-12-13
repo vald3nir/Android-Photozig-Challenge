@@ -13,8 +13,6 @@ import org.androidannotations.annotations.ViewById;
 import vald3nir.programming_challenge.R;
 import vald3nir.programming_challenge.models.Multimedia;
 
-import static vald3nir.programming_challenge.views.MainActivity.dataAssets;
-
 /**
  * Created by vald3nir on 12/12/17
  */
@@ -33,16 +31,16 @@ public class MultimediaItemView extends LinearLayout {
     @ViewById
     ImageView backgrounImageview;
 
-    public void bind(Multimedia multimedia) {
+    public void bind(String baseURL, Multimedia multimedia) {
 
-        if (multimedia != null) {
+        if (multimedia != null && baseURL != null) {
 
             if (multimedia.getName() != null) {
                 titleTextview.setText(multimedia.getName());
             }
 
             if (multimedia.getImage() != null) {
-                Picasso.with(getContext()).load(dataAssets.getAssetsLocation() + "/" + multimedia.getImage()).into(backgrounImageview);
+                Picasso.with(getContext()).load(baseURL + "/" + multimedia.getImage()).into(backgrounImageview);
             }
 
         }

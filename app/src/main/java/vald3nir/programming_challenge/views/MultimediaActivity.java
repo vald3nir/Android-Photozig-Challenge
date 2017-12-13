@@ -24,11 +24,9 @@ import java.io.IOException;
 import vald3nir.programming_challenge.R;
 import vald3nir.programming_challenge.models.Multimedia;
 
-import static vald3nir.programming_challenge.views.MainActivity.dataAssets;
-
 @SuppressLint("Registered")
 @EActivity(R.layout.activity_multimedia)
-public class MultimediaActivity extends AppCompatActivity {
+public class MultimediaActivity extends AppCompatActivity implements VideoDownloadCallback {
 
     @Extra
     Multimedia multimedia;
@@ -45,7 +43,10 @@ public class MultimediaActivity extends AppCompatActivity {
     MediaPlayer mediaPlayerAudio = new MediaPlayer();
     MediaPlayer mediaPlayerVideo = new MediaPlayer();
 
-    int currentRuntime;
+    private int currentRuntime = 0;
+    private String pathFileVideo;
+
+    //    ==========================================================================================
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -54,9 +55,25 @@ public class MultimediaActivity extends AppCompatActivity {
         System.out.println();
     }
 
-    @SuppressLint("RestrictedApi")
+    //    ==========================================================================================
+
+    @Override
+    public void onDownloadComplete() {
+        playAudio();
+        playVideo();
+    }
+
+    //    ==========================================================================================
+
     @AfterViews
     public void afterViews() {
+        actionBarConfiguration();
+    }
+
+    //    ==========================================================================================
+
+    @SuppressLint("RestrictedApi")
+    private void actionBarConfiguration() {
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
@@ -74,6 +91,8 @@ public class MultimediaActivity extends AppCompatActivity {
         });
     }
 
+    //    ==========================================================================================
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -84,22 +103,29 @@ public class MultimediaActivity extends AppCompatActivity {
         }
     }
 
-    private void stopVideo() {
-        if (mediaPlayerVideo.isPlaying()) {
-            mediaPlayerVideo.stop();
-            mediaPlayerVideo.release();
-            mediaPlayerVideo = new MediaPlayer();
-        }
-    }
-
+    //    ==========================================================================================
 
     @Override
     protected void onResume() {
         super.onResume();
-        playAudio();
-        playVideo();
+
+        pathFileVideo = Environment.getExternalStorageDirectory().getPath() + "/" + multimedia.getVideo();
+        File file = new File(pathFileVideo);
+
+        if (file.exists()) {
+
+            playAudio();
+            playVideo();
+
+        } else {
+
+            final VideoDownloader downloadTask = new VideoDownloader(this, multimedia.getVideo(), this);
+            downloadTask.execute(baseUrl + "/" + multimedia.getVideo());
+
+        }
     }
 
+    //    ==========================================================================================
 
     @UiThread
     public void playAudio() {
@@ -108,7 +134,7 @@ public class MultimediaActivity extends AppCompatActivity {
 
             try {
 
-                mediaPlayerAudio.setDataSource(dataAssets.getAssetsLocation() + "/" + multimedia.getAudio());
+                mediaPlayerAudio.setDataSource(baseUrl + "/" + multimedia.getAudio());
                 mediaPlayerAudio.prepare();
                 mediaPlayerAudio.seekTo(currentRuntime);
 
@@ -121,7 +147,11 @@ public class MultimediaActivity extends AppCompatActivity {
             mediaPlayerAudio.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
-                    stopVideo();
+                    if (mediaPlayerVideo.isPlaying()) {
+                        mediaPlayerVideo.stop();
+                        mediaPlayerVideo.release();
+                        mediaPlayerVideo = new MediaPlayer();
+                    }
                 }
             });
             mediaPlayerAudio.start();
@@ -131,31 +161,22 @@ public class MultimediaActivity extends AppCompatActivity {
         }
     }
 
+    //    ==========================================================================================
+
     @UiThread
     public void playVideo() {
 
-        String filePath = Environment.getExternalStorageDirectory().getPath() + "/" + multimedia.getVideo();
-        File file = new File(filePath);
-
-        if (file.exists()) {
-
-            videoViewRelative.setVideoURI(Uri.parse(filePath));
-            videoViewRelative.requestFocus();
+        videoViewRelative.setVideoURI(Uri.parse(pathFileVideo));
+        videoViewRelative.requestFocus();
 //        videoViewRelative.setMediaController(new MediaController(this));
-            videoViewRelative.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-
-                @Override
-                public void onPrepared(MediaPlayer mediaPlayer) {
-                    mediaPlayerVideo = mediaPlayer;
-                    mediaPlayerVideo.setLooping(true);
-                }
-            });
-            videoViewRelative.start();
-
-        } else {
-        }
-
-
+        videoViewRelative.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                mediaPlayerVideo = mediaPlayer;
+                mediaPlayerVideo.setLooping(true);
+            }
+        });
+        videoViewRelative.start();
     }
 
 

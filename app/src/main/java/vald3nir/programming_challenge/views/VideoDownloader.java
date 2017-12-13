@@ -25,17 +25,17 @@ public class VideoDownloader extends AsyncTask<String, Integer, String> implemen
     private PowerManager.WakeLock wakeLock;
     private String fileName;
     private ProgressDialog progressDialog;
+    private VideoDownloadCallback callback;
 
     public VideoDownloader(Context context, String fileName) {
         this.context = context;
         this.fileName = fileName;
+    }
 
-        progressDialog = new ProgressDialog(context);
-        progressDialog.setMessage("Downloading " + fileName);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        progressDialog.setCancelable(true);
-        progressDialog.setOnCancelListener(this);
+    public VideoDownloader(Context context, String fileName, VideoDownloadCallback callback) {
+        this.context = context;
+        this.fileName = fileName;
+        this.callback = callback;
     }
 
 
@@ -119,6 +119,12 @@ public class VideoDownloader extends AsyncTask<String, Integer, String> implemen
             wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, getClass().getName());
             wakeLock.acquire();
 
+            progressDialog = new ProgressDialog(context);
+            progressDialog.setMessage("Downloading " + fileName);
+            progressDialog.setIndeterminate(true);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            progressDialog.setCancelable(true);
+            progressDialog.setOnCancelListener(this);
             progressDialog.show();
         }
 
@@ -136,10 +142,18 @@ public class VideoDownloader extends AsyncTask<String, Integer, String> implemen
     protected void onPostExecute(String result) {
         wakeLock.release();
         progressDialog.dismiss();
-        if (result != null)
-            Toast.makeText(context, "Download error: " + result, Toast.LENGTH_LONG).show();
-        else
+
+        if (result == null) {
+
             Toast.makeText(context, "File downloaded", Toast.LENGTH_SHORT).show();
+
+            if (callback != null) {
+                callback.onDownloadComplete();
+            }
+
+        } else {
+            Toast.makeText(context, "Download error: " + result, Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
