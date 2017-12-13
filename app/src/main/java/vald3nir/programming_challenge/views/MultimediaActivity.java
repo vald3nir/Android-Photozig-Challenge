@@ -40,26 +40,19 @@ public class MultimediaActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        stopMultimedia();
-    }
-
-    private void stopMultimedia() {
-
         if (mediaPlayerAudio.isPlaying()) {
             mediaPlayerAudio.stop();
             mediaPlayerAudio.release();
             mediaPlayerAudio = new MediaPlayer();
         }
-
-//        stopVideo();
     }
 
     private void stopVideo() {
-//        if (mediaPlayerVideo.isPlaying()) {
+        if (mediaPlayerVideo.isPlaying()) {
             mediaPlayerVideo.stop();
             mediaPlayerVideo.release();
             mediaPlayerVideo = new MediaPlayer();
-//        }
+        }
     }
 
 
