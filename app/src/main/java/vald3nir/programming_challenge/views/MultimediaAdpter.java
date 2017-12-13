@@ -24,7 +24,7 @@ public class MultimediaAdpter extends BaseAdapter {
     private String baseURL;
 
     @RootContext
-    public Context context;
+    Context context;
 
     public void bind(String baseURL, Collection<Multimedia> multimedias) {
         this.multimedias = new ArrayList<>(multimedias);

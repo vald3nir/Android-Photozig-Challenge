@@ -58,9 +58,16 @@ public class MultimediaActivity extends AppCompatActivity implements VideoDownlo
     //    ==========================================================================================
 
     @Override
-    public void onDownloadComplete() {
+    public void notifyDownloadComplete() {
         playAudio();
         playVideo();
+    }
+
+    //    ==========================================================================================
+
+    @Override
+    public void notifyDownloadCanceled() {
+        onBackPressed();
     }
 
     //    ==========================================================================================

@@ -1,5 +1,6 @@
 package vald3nir.programming_challenge.views;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -8,6 +9,7 @@ import android.os.Environment;
 import android.os.PowerManager;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,11 +23,18 @@ import java.net.URL;
 
 public class VideoDownloader extends AsyncTask<String, Integer, String> implements DialogInterface.OnCancelListener {
 
+    @SuppressLint("StaticFieldLeak")
     private Context context;
+
     private PowerManager.WakeLock wakeLock;
+
     private String fileName;
+
     private ProgressDialog progressDialog;
+
     private VideoDownloadCallback callback;
+
+    //    ==========================================================================================
 
     public VideoDownloader(Context context, String fileName) {
         this.context = context;
@@ -38,6 +47,7 @@ public class VideoDownloader extends AsyncTask<String, Integer, String> implemen
         this.callback = callback;
     }
 
+    //    ==========================================================================================
 
     @Override
     protected String doInBackground(String... sUrl) {
@@ -107,6 +117,7 @@ public class VideoDownloader extends AsyncTask<String, Integer, String> implemen
         return null;
     }
 
+    //    ==========================================================================================
 
     @Override
     protected void onPreExecute() {
@@ -130,6 +141,8 @@ public class VideoDownloader extends AsyncTask<String, Integer, String> implemen
 
     }
 
+    //    ==========================================================================================
+
     @Override
     protected void onProgressUpdate(Integer... progress) {
         super.onProgressUpdate(progress);
@@ -137,6 +150,8 @@ public class VideoDownloader extends AsyncTask<String, Integer, String> implemen
         progressDialog.setMax(100);
         progressDialog.setProgress(progress[0]);
     }
+
+    //    ==========================================================================================
 
     @Override
     protected void onPostExecute(String result) {
@@ -148,7 +163,7 @@ public class VideoDownloader extends AsyncTask<String, Integer, String> implemen
             Toast.makeText(context, "File downloaded", Toast.LENGTH_SHORT).show();
 
             if (callback != null) {
-                callback.onDownloadComplete();
+                callback.notifyDownloadComplete();
             }
 
         } else {
@@ -156,8 +171,21 @@ public class VideoDownloader extends AsyncTask<String, Integer, String> implemen
         }
     }
 
+    //    ==========================================================================================
+
     @Override
     public void onCancel(DialogInterface dialog) {
         this.cancel(true);
+
+        String pathFileVideo = Environment.getExternalStorageDirectory().getPath() + "/" + fileName;
+        File file = new File(pathFileVideo);
+
+        if (file.exists()) {
+            file.delete();
+        }
+
+        if (callback != null) {
+            callback.notifyDownloadCanceled();
+        }
     }
 }
