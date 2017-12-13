@@ -6,10 +6,14 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.SeekBar;
+import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import org.androidannotations.annotations.AfterViews;
@@ -20,6 +24,7 @@ import org.androidannotations.annotations.ViewById;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import vald3nir.programming_challenge.R;
 import vald3nir.programming_challenge.models.Multimedia;
@@ -38,10 +43,19 @@ public class MultimediaActivity extends AppCompatActivity implements VideoDownlo
     public Toolbar toolbar;
 
     @ViewById
-    VideoView videoViewRelative;
+    VideoView videoView;
+
+    @ViewById
+    TextView timeCurrentTextview, timeTotalTextview;
+
+    @ViewById
+    SeekBar seekBar;
+
 
     MediaPlayer mediaPlayerAudio = new MediaPlayer();
     MediaPlayer mediaPlayerVideo = new MediaPlayer();
+
+    private Handler myHandler = new Handler();
 
     private int currentRuntime = 0;
     private String pathFileVideo;
@@ -58,7 +72,7 @@ public class MultimediaActivity extends AppCompatActivity implements VideoDownlo
     //    ==========================================================================================
 
     @Override
-    public void notifyDownloadComplete() {
+    public void runMultimedia() {
         playAudio();
         playVideo();
     }
@@ -75,7 +89,40 @@ public class MultimediaActivity extends AppCompatActivity implements VideoDownlo
     @AfterViews
     public void afterViews() {
         actionBarConfiguration();
+        myHandler.postDelayed(UpdateSongTime, 100);
     }
+
+    //    ==========================================================================================
+
+    private void seekbarConfiguration() {
+
+        int duration = mediaPlayerAudio.getDuration();
+        long minutes = TimeUnit.MILLISECONDS.toMinutes((long) duration);
+        long secords = TimeUnit.MILLISECONDS.toSeconds((long) duration) -
+                TimeUnit.MINUTES.toSeconds(minutes);
+
+        timeTotalTextview.setText(String.format("%d:%d", minutes, secords));
+        seekBar.setMax(duration);
+        seekBar.setProgress(currentRuntime);
+    }
+
+    //    ==========================================================================================
+
+    private Runnable UpdateSongTime = new Runnable() {
+        @SuppressLint("DefaultLocale")
+        public void run() {
+            currentRuntime = mediaPlayerAudio.getCurrentPosition();
+
+            long minutes = TimeUnit.MILLISECONDS.toMinutes((long) currentRuntime);
+            long secords = TimeUnit.MILLISECONDS.toSeconds((long) currentRuntime) -
+                    TimeUnit.MINUTES.toSeconds(minutes);
+
+            timeCurrentTextview.setText(String.format("%d:%d", minutes, secords));
+
+            seekbarConfiguration();
+            myHandler.postDelayed(this, 100);
+        }
+    };
 
     //    ==========================================================================================
 
@@ -120,15 +167,11 @@ public class MultimediaActivity extends AppCompatActivity implements VideoDownlo
         File file = new File(pathFileVideo);
 
         if (file.exists()) {
-
-            playAudio();
-            playVideo();
+            runMultimedia();
 
         } else {
-
             final VideoDownloader downloadTask = new VideoDownloader(this, multimedia.getVideo(), this);
             downloadTask.execute(baseUrl + "/" + multimedia.getVideo());
-
         }
     }
 
@@ -147,6 +190,8 @@ public class MultimediaActivity extends AppCompatActivity implements VideoDownlo
 
             } catch (IOException e) {
                 e.printStackTrace();
+                Toast.makeText(this, "Audio not available!", Toast.LENGTH_SHORT).show();
+                onBackPressed();
             }
 
             mediaPlayerAudio.setLooping(false);
@@ -172,18 +217,16 @@ public class MultimediaActivity extends AppCompatActivity implements VideoDownlo
 
     @UiThread
     public void playVideo() {
-
-        videoViewRelative.setVideoURI(Uri.parse(pathFileVideo));
-        videoViewRelative.requestFocus();
-//        videoViewRelative.setMediaController(new MediaController(this));
-        videoViewRelative.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+        videoView.setVideoURI(Uri.parse(pathFileVideo));
+        videoView.requestFocus();
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mediaPlayer) {
                 mediaPlayerVideo = mediaPlayer;
                 mediaPlayerVideo.setLooping(true);
             }
         });
-        videoViewRelative.start();
+        videoView.start();
     }
 
 

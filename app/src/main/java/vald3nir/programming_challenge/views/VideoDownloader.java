@@ -163,7 +163,7 @@ public class VideoDownloader extends AsyncTask<String, Integer, String> implemen
             Toast.makeText(context, "File downloaded", Toast.LENGTH_SHORT).show();
 
             if (callback != null) {
-                callback.notifyDownloadComplete();
+                callback.runMultimedia();
             }
 
         } else {

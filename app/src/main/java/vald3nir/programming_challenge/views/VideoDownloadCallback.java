@@ -6,7 +6,7 @@ package vald3nir.programming_challenge.views;
 
 public interface VideoDownloadCallback {
 
-    void notifyDownloadComplete();
+    void runMultimedia();
 
     void notifyDownloadCanceled();
 
