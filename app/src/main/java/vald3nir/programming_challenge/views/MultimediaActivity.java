@@ -27,20 +27,24 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import vald3nir.programming_challenge.R;
+import vald3nir.programming_challenge.control.VideoDownloadCallback;
+import vald3nir.programming_challenge.control.VideoDownloader;
 import vald3nir.programming_challenge.models.Multimedia;
 
 @SuppressLint("Registered")
 @EActivity(R.layout.activity_multimedia)
 public class MultimediaActivity extends AppCompatActivity implements VideoDownloadCallback {
 
+    /*Note: Variables noted with @Extra and @ViewById can not be private*/
+
     @Extra
-    Multimedia multimedia;
+    Multimedia multimedia; // get multimedia from list (Intent)
 
     @Extra
     String baseUrl;
 
     @ViewById
-    public Toolbar toolbar;
+    Toolbar toolbar;
 
     @ViewById
     VideoView videoView;
@@ -51,11 +55,13 @@ public class MultimediaActivity extends AppCompatActivity implements VideoDownlo
     @ViewById
     SeekBar seekBar;
 
+    //    ==========================================================================================
 
-    MediaPlayer mediaPlayerAudio = new MediaPlayer();
-    MediaPlayer mediaPlayerVideo = new MediaPlayer();
 
-    private Handler myHandler = new Handler();
+    private MediaPlayer mediaPlayerAudio = new MediaPlayer();
+    private MediaPlayer mediaPlayerVideo = new MediaPlayer();
+
+    private Handler handlerUpdateProgressAudio = new Handler();
 
     private int currentRuntime = 0;
     private String pathFileVideo;
@@ -89,7 +95,8 @@ public class MultimediaActivity extends AppCompatActivity implements VideoDownlo
     @AfterViews
     public void afterViews() {
         actionBarConfiguration();
-        myHandler.postDelayed(UpdateSongTime, 100);
+        pathFileVideo = Environment.getExternalStorageDirectory().getPath() + "/" + multimedia.getVideo();
+        handlerUpdateProgressAudio.postDelayed(UpdateSongTime, 100);
     }
 
     //    ==========================================================================================
@@ -120,7 +127,7 @@ public class MultimediaActivity extends AppCompatActivity implements VideoDownlo
             timeCurrentTextview.setText(String.format("%d:%d", minutes, secords));
 
             seekbarConfiguration();
-            myHandler.postDelayed(this, 100);
+            handlerUpdateProgressAudio.postDelayed(this, 100);
         }
     };
 
@@ -135,6 +142,10 @@ public class MultimediaActivity extends AppCompatActivity implements VideoDownlo
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDefaultDisplayHomeAsUpEnabled(true);
+
+            if (multimedia != null && multimedia.getName() != null) {
+                actionBar.setTitle(multimedia.getName());
+            }
         }
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -162,14 +173,21 @@ public class MultimediaActivity extends AppCompatActivity implements VideoDownlo
     @Override
     protected void onResume() {
         super.onResume();
+        checkVideoDownload();
+    }
 
-        pathFileVideo = Environment.getExternalStorageDirectory().getPath() + "/" + multimedia.getVideo();
+    //    ==========================================================================================
+
+    private void checkVideoDownload() {
         File file = new File(pathFileVideo);
 
         if (file.exists()) {
             runMultimedia();
 
         } else {
+
+            /* run download the video*/
+
             final VideoDownloader downloadTask = new VideoDownloader(this, multimedia.getVideo(), this);
             downloadTask.execute(baseUrl + "/" + multimedia.getVideo());
         }
