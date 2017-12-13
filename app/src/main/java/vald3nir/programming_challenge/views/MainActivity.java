@@ -30,12 +30,12 @@ import vald3nir.programming_challenge.models.Multimedia;
 @EActivity(R.layout.activity_main)
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
+    private DataAssets dataAssets;
+
     private RetrofitServices retrofitService;
 
     @Bean
     MultimediaAdpter adpter;
-
-    DataAssets dataAssets;
 
     @ViewById
     ListView multimediaListview;
@@ -80,8 +80,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private void showDialog(final Multimedia multimedia) {
 
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setMessage("Select an option:").setCancelable(false)
+        AlertDialog alertDialog = new AlertDialog.Builder(this)
+
+                .setMessage("Select an option:").setCancelable(false)
 
                 .setPositiveButton("Go to next page", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -89,15 +90,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         MultimediaActivity_.intent(MainActivity.this).multimedia(multimedia).baseUrl(dataAssets.getAssetsLocation()).start();
                     }
                 })
+
                 .setNegativeButton("Donwload Video", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                         runDownloadMultimedia(multimedia);
                     }
-                });
+                })
 
-        AlertDialog alertDialog = alertDialogBuilder.create();
+                .create();
+
         alertDialog.show();
+        alertDialog.setCanceledOnTouchOutside(true);
     }
 
     private void runDownloadMultimedia(Multimedia multimedia) {
