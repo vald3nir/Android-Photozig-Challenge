@@ -2,11 +2,13 @@ package vald3nir.programming_challenge.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by vald3nir on 12/12/17
  */
 
-public class Text {
+public class Text implements Serializable {
 
     @SerializedName("txt")
     private String txt;

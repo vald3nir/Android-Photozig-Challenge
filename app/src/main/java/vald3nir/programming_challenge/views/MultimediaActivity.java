@@ -6,7 +6,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.view.SurfaceHolder;
-import android.view.SurfaceView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import org.androidannotations.annotations.AfterViews;
@@ -14,6 +14,8 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+
+import java.io.File;
 
 import vald3nir.programming_challenge.R;
 import vald3nir.programming_challenge.models.Multimedia;
@@ -33,8 +35,8 @@ public class MultimediaActivity extends AppCompatActivity implements SurfaceHold
     @ViewById
     VideoView videoViewRelative;
 
-    @ViewById
-    SurfaceView surfaceview;
+//    @ViewById
+//    SurfaceView surfaceview;
 
 
     MediaPlayer mediaPlayer = new MediaPlayer();
@@ -60,8 +62,8 @@ public class MultimediaActivity extends AppCompatActivity implements SurfaceHold
     @AfterViews
     public void afterViews() {
 
-        surfaceHolder = surfaceview.getHolder();
-        surfaceHolder.addCallback(this);
+//        surfaceHolder = surfaceview.getHolder();
+//        surfaceHolder.addCallback(this);
 
 
         playAudio();
@@ -77,40 +79,54 @@ public class MultimediaActivity extends AppCompatActivity implements SurfaceHold
     @UiThread
     public void playAudio() {
 
-        try {
-            mediaPlayer.setDataSource(dataAssets.getAssetsLocation() + "/" + multimedia.getAudio());
-            mediaPlayer.prepare();
-            mediaPlayer.setLooping(false);
-            mediaPlayer.setDisplay(surfaceHolder);
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                    mediaPlayerVideo.stop();
-                }
-            });
-
-
-            mediaPlayer.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            mediaPlayer.setDataSource(dataAssets.getAssetsLocation() + "/" + multimedia.getAudio());
+//            mediaPlayer.prepare();
+//            mediaPlayer.setLooping(false);
+//            mediaPlayer.setDisplay(surfaceHolder);
+//            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+//                @Override
+//                public void onCompletion(MediaPlayer mp) {
+//                    mediaPlayerVideo.stop();
+//                }
+//            });
+//
+//
+//            mediaPlayer.start();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     @UiThread
     public void playVideo() {
-        videoViewRelative.setVideoURI(Uri.parse("/sdcard/" + multimedia.getVideo()));
-        videoViewRelative.requestFocus();
-//        videoViewRelative.setMediaController(new MediaController(this));
-        videoViewRelative.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
 
-            @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
-                mediaPlayerVideo = mediaPlayer;
-                mediaPlayerVideo.setLooping(true);
-            }
-        });
-        videoViewRelative.start();
+        String filePath = "/sdcard/" + multimedia.getVideo();
+        File file = new File(filePath);
+
+        if (file.exists()) {
+
+            Toast.makeText(this, "ok", Toast.LENGTH_SHORT).show();
+
+
+            videoViewRelative.setVideoURI(Uri.parse(filePath));
+            videoViewRelative.requestFocus();
+//        videoViewRelative.setMediaController(new MediaController(this));
+            videoViewRelative.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+
+                @Override
+                public void onPrepared(MediaPlayer mediaPlayer) {
+                    mediaPlayerVideo = mediaPlayer;
+                    mediaPlayerVideo.setLooping(true);
+                }
+            });
+            videoViewRelative.start();
+        } else {
+            Toast.makeText(this, "Nao", Toast.LENGTH_SHORT).show();
+        }
+
+
     }
 
     @Override
