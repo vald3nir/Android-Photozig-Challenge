@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.os.PowerManager;
 import android.widget.Toast;
 
@@ -62,7 +63,7 @@ public class VideoDownloader extends AsyncTask<String, Integer, String> implemen
 
             // download the fileName
             input = connection.getInputStream();
-            output = new FileOutputStream("/sdcard/" + fileName);
+            output = new FileOutputStream(Environment.getExternalStorageDirectory().getPath() + "/" + fileName);
 
             byte data[] = new byte[4096];
             long total = 0;

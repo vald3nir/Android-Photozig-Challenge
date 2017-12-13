@@ -6,6 +6,6 @@ package vald3nir.programming_challenge.app;
 
 public class Constants {
 
-    public static final String URL = "http://pbmedia.pepblast.com/pz_challenge/";
+    public static final String URL_SERVER = "http://pbmedia.pepblast.com/pz_challenge/";
 
 }

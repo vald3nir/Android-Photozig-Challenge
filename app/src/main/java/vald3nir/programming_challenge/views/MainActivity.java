@@ -3,6 +3,7 @@ package vald3nir.programming_challenge.views;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -37,6 +38,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     static DataAssets dataAssets;
 
+    static String folder = "";
+
     @ViewById
     ListView multimediaListview;
 
@@ -46,9 +49,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
 
         this.retrofitService = new Retrofit.Builder()
-                .baseUrl(Constants.URL)
+                .baseUrl(Constants.URL_SERVER)
                 .addConverterFactory(GsonConverterFactory.create()).build()
                 .create(RetrofitServices.class);
+
+        this.folder =  Environment.getExternalStorageDirectory().getPath(); //"/sdcard/" + getString(R.string.app_name);
     }
 
     @AfterViews
