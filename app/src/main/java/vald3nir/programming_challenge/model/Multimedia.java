@@ -13,16 +13,12 @@ public class Multimedia implements Serializable {
 
     @SerializedName("name")
     private String name;
-
     @SerializedName("bg")
     private String video;
-
     @SerializedName("im")
     private String image;
-
     @SerializedName("sg")
     private String audio;
-
     @SerializedName("txts")
     private Collection<Text> texts;
 

@@ -12,9 +12,8 @@ public class DataAssets {
 
     @SerializedName("assetsLocation")
     private String assetsLocation;
-
     @SerializedName("objects")
-    private Collection<Multimedia> multimedias;
+    private Collection<Multimedia> multimediaCollection;
 
     public String getAssetsLocation() {
         return assetsLocation;
@@ -25,10 +24,10 @@ public class DataAssets {
     }
 
     public Collection<Multimedia> getMultimedia() {
-        return multimedias;
+        return multimediaCollection;
     }
 
     public void setMultimedia(Collection<Multimedia> multimedia) {
-        this.multimedias = multimedia;
+        this.multimediaCollection = multimedia;
     }
 }
