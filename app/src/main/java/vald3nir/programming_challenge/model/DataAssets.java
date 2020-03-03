@@ -1,4 +1,4 @@
-package vald3nir.programming_challenge.models;
+package vald3nir.programming_challenge.model;
 
 import com.google.gson.annotations.SerializedName;
 

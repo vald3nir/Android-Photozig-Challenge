@@ -1,26 +1,22 @@
 package vald3nir.programming_challenge.views;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
-
-import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.Extra;
-import org.androidannotations.annotations.UiThread;
-import org.androidannotations.annotations.ViewById;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,34 +25,15 @@ import java.util.concurrent.TimeUnit;
 import vald3nir.programming_challenge.R;
 import vald3nir.programming_challenge.control.VideoDownloadCallback;
 import vald3nir.programming_challenge.control.VideoDownloader;
-import vald3nir.programming_challenge.models.Multimedia;
+import vald3nir.programming_challenge.model.Multimedia;
 
-@SuppressLint("Registered")
-@EActivity(R.layout.activity_multimedia)
 public class MultimediaActivity extends AppCompatActivity implements VideoDownloadCallback {
 
-    /*Note: Variables noted with @Extra and @ViewById can not be private*/
-
-    @Extra
     Multimedia multimedia; // get multimedia from list (Intent)
-
-    @Extra
     String baseUrl;
-
-    @ViewById
-    Toolbar toolbar;
-
-    @ViewById
     VideoView videoView;
-
-    @ViewById
     TextView timeCurrentTextview, timeTotalTextview;
-
-    @ViewById
     SeekBar seekBar;
-
-    //    ==========================================================================================
-
 
     private MediaPlayer mediaPlayerAudio = new MediaPlayer();
     private MediaPlayer mediaPlayerVideo = new MediaPlayer();
@@ -66,16 +43,18 @@ public class MultimediaActivity extends AppCompatActivity implements VideoDownlo
     private int currentRuntime = 0;
     private String pathFileVideo;
 
-    //    ==========================================================================================
+    public static void startActivity(MainActivity mainActivity, Multimedia multimedia, String assetsLocation) {
+        Intent intent = new Intent(mainActivity, MultimediaActivity.class);
+        intent.putExtra("multimedia", multimedia);
+        intent.putExtra("assetsLocation", assetsLocation);
+        mainActivity.startActivity(intent);
+    }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         currentRuntime = mediaPlayerAudio.getCurrentPosition();
-        System.out.println();
     }
-
-    //    ==========================================================================================
 
     @Override
     public void runMultimedia() {
@@ -83,24 +62,33 @@ public class MultimediaActivity extends AppCompatActivity implements VideoDownlo
         playVideo();
     }
 
-    //    ==========================================================================================
-
     @Override
     public void notifyDownloadCanceled() {
         onBackPressed();
     }
 
-    //    ==========================================================================================
-
-    @AfterViews
-    public void afterViews() {
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_multimedia);
         actionBarConfiguration();
+
+        videoView = findViewById(R.id.videoView);
+        timeCurrentTextview = findViewById(R.id.time_current_textview);
+        timeTotalTextview = findViewById(R.id.time_total_textview);
+        seekBar = findViewById(R.id.seekBar);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            multimedia = (Multimedia) extras.getSerializable("multimedia");
+            baseUrl = extras.getString("assetsLocation");
+        }
+
         pathFileVideo = Environment.getExternalStorageDirectory().getPath() + "/" + multimedia.getVideo();
         handlerUpdateProgressAudio.postDelayed(UpdateSongTime, 100);
     }
 
-    //    ==========================================================================================
-
+    @SuppressLint("DefaultLocale")
     private void seekbarConfiguration() {
 
         int duration = mediaPlayerAudio.getDuration();
@@ -112,8 +100,6 @@ public class MultimediaActivity extends AppCompatActivity implements VideoDownlo
         seekBar.setMax(duration);
         seekBar.setProgress(currentRuntime);
     }
-
-    //    ==========================================================================================
 
     private Runnable UpdateSongTime = new Runnable() {
         @SuppressLint("DefaultLocale")
@@ -131,10 +117,10 @@ public class MultimediaActivity extends AppCompatActivity implements VideoDownlo
         }
     };
 
-    //    ==========================================================================================
-
     @SuppressLint("RestrictedApi")
     private void actionBarConfiguration() {
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
@@ -148,15 +134,9 @@ public class MultimediaActivity extends AppCompatActivity implements VideoDownlo
             }
         }
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
     }
 
-    //    ==========================================================================================
 
     @Override
     protected void onPause() {
@@ -168,15 +148,11 @@ public class MultimediaActivity extends AppCompatActivity implements VideoDownlo
         }
     }
 
-    //    ==========================================================================================
-
     @Override
     protected void onResume() {
         super.onResume();
         checkVideoDownload();
     }
-
-    //    ==========================================================================================
 
     private void checkVideoDownload() {
         File file = new File(pathFileVideo);
@@ -187,15 +163,11 @@ public class MultimediaActivity extends AppCompatActivity implements VideoDownlo
         } else {
 
             /* run download the video*/
-
             final VideoDownloader downloadTask = new VideoDownloader(this, multimedia.getVideo(), this);
             downloadTask.execute(baseUrl + "/" + multimedia.getVideo());
         }
     }
 
-    //    ==========================================================================================
-
-    @UiThread
     public void playAudio() {
 
         try {
@@ -231,9 +203,6 @@ public class MultimediaActivity extends AppCompatActivity implements VideoDownlo
         }
     }
 
-    //    ==========================================================================================
-
-    @UiThread
     public void playVideo() {
         videoView.setVideoURI(Uri.parse(pathFileVideo));
         videoView.requestFocus();

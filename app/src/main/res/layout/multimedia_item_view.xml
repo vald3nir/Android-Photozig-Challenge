@@ -19,13 +19,13 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:id="@+id/backgroun_imageview"
+                android:id="@+id/background_imageView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true" />
 
             <TextView
-                android:id="@+id/title_textview"
+                android:id="@+id/title_textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"

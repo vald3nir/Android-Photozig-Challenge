@@ -1,60 +1,52 @@
 package vald3nir.programming_challenge.views;
 
-import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-import vald3nir.programming_challenge.models.Multimedia;
+import vald3nir.programming_challenge.R;
+import vald3nir.programming_challenge.model.Multimedia;
 
 /**
  * Created by vald3nir on 12/12/17
  */
 
-public class MultimediaAdpter extends BaseAdapter {
+public class MultimediaAdapter extends RecyclerView.Adapter<MultimediaViewHolder> {
 
-    private ArrayList<Multimedia> multimedias = new ArrayList<>();
+    private ArrayList<Multimedia> arrayList = new ArrayList<>();
     private String baseURL;
-    private Context context;
+    private MultimediaViewHolder.IMultimediaViewHolder iMultimediaViewHolder;
 
-    public MultimediaAdpter(Context context) {
-        this.context = context;
+    public MultimediaAdapter(MultimediaViewHolder.IMultimediaViewHolder iMultimediaViewHolder) {
+        this.iMultimediaViewHolder = iMultimediaViewHolder;
     }
 
     public void bind(String baseURL, Collection<Multimedia> multimedias) {
-        this.multimedias = new ArrayList<>(multimedias);
+        this.arrayList = new ArrayList<>(multimedias);
         this.baseURL = baseURL;
         notifyDataSetChanged();
     }
 
+    @NonNull
     @Override
-    public int getCount() {
-        return this.multimedias.size();
+    public MultimediaViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.multimedia_item_view, parent, false);
+        return new MultimediaViewHolder(v, iMultimediaViewHolder);
     }
 
     @Override
-    public Multimedia getItem(int position) {
-        return this.multimedias.get(position);
+    public void onBindViewHolder(@NonNull MultimediaViewHolder multimediaViewHolder, int position) {
+        multimediaViewHolder.bind(baseURL, arrayList.get(position));
     }
 
     @Override
-    public long getItemId(int position) {
-        return 0;
+    public int getItemCount() {
+        return arrayList.size();
     }
 
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-
-//        // Builds the list item
-//        MultimediaItemView itemView = MultimediaItemView_.build(context);
-//
-//        itemView.bind(baseURL, getItem(position));
-
-        return null;
-    }
 }

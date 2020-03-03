@@ -1,4 +1,4 @@
-package vald3nir.programming_challenge.views.main;
+package vald3nir.programming_challenge.views;
 
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
@@ -10,13 +10,12 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import vald3nir.programming_challenge.control.VideoDownloader;
-import vald3nir.programming_challenge.models.DataAssets;
-import vald3nir.programming_challenge.models.Multimedia;
-import vald3nir.programming_challenge.services.RetrofitServices;
+import vald3nir.programming_challenge.model.DataAssets;
+import vald3nir.programming_challenge.model.Multimedia;
+import vald3nir.programming_challenge.control.RetrofitServices;
 
 public class MainDelegate {
 
-    private final String URL_SERVER = "http://pbmedia.pepblast.com/pz_challenge/";
     private RetrofitServices retrofitService;
     private MainActivity mainActivity;
     private DataAssets dataAssets;
@@ -24,7 +23,7 @@ public class MainDelegate {
     MainDelegate(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
         this.retrofitService = new Retrofit.Builder()
-                .baseUrl(URL_SERVER)
+                .baseUrl("http://pbmedia.pepblast.com/pz_challenge/")
                 .addConverterFactory(GsonConverterFactory.create()).build()
                 .create(RetrofitServices.class);
     }
@@ -38,13 +37,8 @@ public class MainDelegate {
                 .setPositiveButton("Go to next page", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
-
-//                        // call new activity
-//                        MultimediaActivity_.intent(MainActivity.this)
-//                                // pass parameter to new activity (@Extra)
-//                                .multimedia(multimedia)
-//                                .baseUrl(dataAssets.getAssetsLocation())
-//                                .start();
+                        // call new activity
+                        MultimediaActivity.startActivity(mainActivity, multimedia, dataAssets.getAssetsLocation());
                     }
                 })
 

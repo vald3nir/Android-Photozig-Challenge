@@ -128,7 +128,7 @@ public class VideoDownloader extends AsyncTask<String, Integer, String> implemen
 
         if (powerManager != null) {
             wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, getClass().getName());
-            wakeLock.acquire();
+            wakeLock.acquire(10 * 60 * 1000L /*10 minutes*/);
 
             progressDialog = new ProgressDialog(context);
             progressDialog.setMessage("Downloading " + fileName);

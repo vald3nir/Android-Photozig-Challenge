@@ -1,4 +1,4 @@
-package vald3nir.programming_challenge.views.main;
+package vald3nir.programming_challenge.views;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -12,8 +12,7 @@ import android.support.v7.widget.Toolbar;
 import java.util.Collection;
 
 import vald3nir.programming_challenge.R;
-import vald3nir.programming_challenge.models.Multimedia;
-import vald3nir.programming_challenge.views.MultimediaAdapter;
+import vald3nir.programming_challenge.model.Multimedia;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,14 +26,12 @@ public class MainActivity extends AppCompatActivity {
         delegate = new MainDelegate(this);
         setupActionBar();
 
-        multimediaAdapter = new MultimediaAdapter(this);
+        multimediaAdapter = new MultimediaAdapter(multimedia -> delegate.showDialog(multimedia));
 
         RecyclerView recyclerView = findViewById(R.id.multimedia_recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         recyclerView.setAdapter(multimediaAdapter);
-//        recyclerView.setOnItemClickListener((parent, view, position, id) -> delegate.showDialog(multimediaAdapter.getItem(position)));
 
         delegate.listMultimediaConfiguration();
     }
