@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="vald3nir.programming_challenge">
 
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -13,18 +14,21 @@
         android:label="@string/app_name"
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
         tools:targetApi="n">
-        <activity android:name=".views.MainActivity">
+        <activity
+            android:name=".views.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".views.MultimediaActivity" />
+        <activity
+            android:name=".views.MultimediaActivity"
+            android:screenOrientation="portrait" />
 
     </application>
 
