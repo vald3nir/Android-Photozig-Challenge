@@ -1,4 +1,4 @@
-package vald3nir.programming_challenge.control;
+package vald3nir.movies.control;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;

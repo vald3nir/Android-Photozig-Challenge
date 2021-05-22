@@ -1,4 +1,4 @@
-package vald3nir.programming_challenge;
+package vald3nir.movies;
 
 import org.junit.Test;
 

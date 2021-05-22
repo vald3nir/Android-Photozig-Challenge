@@ -1,8 +1,8 @@
-package vald3nir.programming_challenge.control;
+package vald3nir.movies.control;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
-import vald3nir.programming_challenge.model.DataAssets;
+import vald3nir.movies.model.DataAssets;
 
 public interface RetrofitServices {
 

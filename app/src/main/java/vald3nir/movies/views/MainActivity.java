@@ -1,4 +1,4 @@
-package vald3nir.programming_challenge.views;
+package vald3nir.movies.views;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Collection;
 
-import vald3nir.programming_challenge.R;
-import vald3nir.programming_challenge.model.Multimedia;
+import vald3nir.movies.R;
+import vald3nir.movies.model.Multimedia;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package vald3nir.programming_challenge.views;
+package vald3nir.movies.views;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -22,10 +22,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import vald3nir.programming_challenge.R;
-import vald3nir.programming_challenge.control.VideoDownloadCallback;
-import vald3nir.programming_challenge.control.VideoDownloader;
-import vald3nir.programming_challenge.model.Multimedia;
+import vald3nir.movies.R;
+import vald3nir.movies.control.VideoDownloadCallback;
+import vald3nir.movies.control.VideoDownloader;
+import vald3nir.movies.model.Multimedia;
 
 public class MultimediaActivity extends AppCompatActivity implements VideoDownloadCallback {
 

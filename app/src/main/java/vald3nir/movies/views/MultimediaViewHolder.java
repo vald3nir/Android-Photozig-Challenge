@@ -1,4 +1,4 @@
-package vald3nir.programming_challenge.views;
+package vald3nir.movies.views;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -8,8 +8,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import vald3nir.programming_challenge.R;
-import vald3nir.programming_challenge.model.Multimedia;
+import vald3nir.movies.R;
+import vald3nir.movies.model.Multimedia;
 
 class MultimediaViewHolder extends RecyclerView.ViewHolder {
 

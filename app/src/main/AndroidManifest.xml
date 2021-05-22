@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="vald3nir.programming_challenge">
+    package="vald3nir.movies">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -18,7 +18,7 @@
         android:theme="@style/AppTheme.NoActionBar"
         tools:targetApi="n">
         <activity
-            android:name=".views.MainActivity"
+            android:name="vald3nir.movies.views.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,7 +27,7 @@
         </activity>
 
         <activity
-            android:name=".views.MultimediaActivity"
+            android:name="vald3nir.movies.views.MultimediaActivity"
             android:screenOrientation="portrait" />
 
     </application>

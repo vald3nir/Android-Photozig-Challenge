@@ -1,4 +1,4 @@
-package vald3nir.programming_challenge.control;
+package vald3nir.movies.control;
 
 /**
  * Created by vald3nir on 13/12/17

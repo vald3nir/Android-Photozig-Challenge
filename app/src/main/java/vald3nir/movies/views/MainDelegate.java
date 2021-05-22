@@ -1,4 +1,4 @@
-package vald3nir.programming_challenge.views;
+package vald3nir.movies.views;
 
 import android.content.DialogInterface;
 import androidx.annotation.NonNull;
@@ -9,10 +9,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import vald3nir.programming_challenge.control.VideoDownloader;
-import vald3nir.programming_challenge.model.DataAssets;
-import vald3nir.programming_challenge.model.Multimedia;
-import vald3nir.programming_challenge.control.RetrofitServices;
+import vald3nir.movies.control.VideoDownloader;
+import vald3nir.movies.model.DataAssets;
+import vald3nir.movies.model.Multimedia;
+import vald3nir.movies.control.RetrofitServices;
 
 public class MainDelegate {
 

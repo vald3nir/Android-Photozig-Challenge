@@ -1,4 +1,4 @@
-package vald3nir.programming_challenge.model;
+package vald3nir.movies.model;
 
 import com.google.gson.annotations.SerializedName;
 
