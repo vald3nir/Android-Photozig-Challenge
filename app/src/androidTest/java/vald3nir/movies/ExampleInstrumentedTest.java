@@ -22,6 +22,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getContext();
 
-        assertEquals("vald3nir.programming_challenge", appContext.getPackageName());
+        assertEquals("vald3nir.movies.test", appContext.getPackageName());
     }
 }
