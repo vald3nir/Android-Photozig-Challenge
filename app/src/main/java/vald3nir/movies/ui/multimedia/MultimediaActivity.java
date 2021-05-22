@@ -1,4 +1,4 @@
-package vald3nir.movies.views;
+package vald3nir.movies.ui.multimedia;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -23,9 +23,10 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import vald3nir.movies.R;
-import vald3nir.movies.control.VideoDownloadCallback;
-import vald3nir.movies.control.VideoDownloader;
+import vald3nir.movies.rest.VideoDownloadCallback;
+import vald3nir.movies.rest.VideoDownloader;
 import vald3nir.movies.model.Multimedia;
+import vald3nir.movies.ui.home.HomeActivity;
 
 public class MultimediaActivity extends AppCompatActivity implements VideoDownloadCallback {
 
@@ -43,11 +44,11 @@ public class MultimediaActivity extends AppCompatActivity implements VideoDownlo
     private int currentRuntime = 0;
     private String pathFileVideo;
 
-    public static void startActivity(MainActivity mainActivity, Multimedia multimedia, String assetsLocation) {
-        Intent intent = new Intent(mainActivity, MultimediaActivity.class);
+    public static void startActivity(HomeActivity homeActivity, Multimedia multimedia, String assetsLocation) {
+        Intent intent = new Intent(homeActivity, MultimediaActivity.class);
         intent.putExtra("multimedia", multimedia);
         intent.putExtra("assetsLocation", assetsLocation);
-        mainActivity.startActivity(intent);
+        homeActivity.startActivity(intent);
     }
 
     @Override

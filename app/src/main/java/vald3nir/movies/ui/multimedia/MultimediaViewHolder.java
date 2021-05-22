@@ -1,7 +1,8 @@
-package vald3nir.movies.views;
+package vald3nir.movies.ui.multimedia;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -44,7 +45,7 @@ class MultimediaViewHolder extends RecyclerView.ViewHolder {
         });
     }
 
-    interface IMultimediaViewHolder {
+    public interface IMultimediaViewHolder {
         void onClickMultimedia(Multimedia multimedia);
     }
 }

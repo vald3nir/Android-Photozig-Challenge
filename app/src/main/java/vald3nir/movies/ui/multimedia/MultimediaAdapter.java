@@ -1,4 +1,4 @@
-package vald3nir.movies.views;
+package vald3nir.movies.ui.multimedia;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;

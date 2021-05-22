@@ -1,4 +1,4 @@
-package vald3nir.movies.views;
+package vald3nir.movies.ui.home;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -14,17 +14,18 @@ import java.util.Collection;
 
 import vald3nir.movies.R;
 import vald3nir.movies.model.Multimedia;
+import vald3nir.movies.ui.multimedia.MultimediaAdapter;
 
-public class MainActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity {
 
-    private MainDelegate delegate;
+    private HomeDelegate delegate;
     private MultimediaAdapter multimediaAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        delegate = new MainDelegate(this);
+        delegate = new HomeDelegate(this);
         setupActionBar();
 
         multimediaAdapter = new MultimediaAdapter(multimedia -> delegate.showDialog(multimedia));

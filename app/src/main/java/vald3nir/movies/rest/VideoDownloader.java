@@ -1,4 +1,4 @@
-package vald3nir.movies.control;
+package vald3nir.movies.rest;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -24,7 +24,7 @@ import java.net.URL;
 public class VideoDownloader extends AsyncTask<String, Integer, String> implements DialogInterface.OnCancelListener {
 
     @SuppressLint("StaticFieldLeak")
-    private Context context;
+    private final Context context;
 
     private PowerManager.WakeLock wakeLock;
 

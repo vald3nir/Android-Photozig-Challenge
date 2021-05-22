@@ -1,4 +1,4 @@
-package vald3nir.movies.views;
+package vald3nir.movies.ui.home;
 
 import android.content.DialogInterface;
 import androidx.annotation.NonNull;
@@ -9,19 +9,20 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import vald3nir.movies.control.VideoDownloader;
+import vald3nir.movies.rest.VideoDownloader;
 import vald3nir.movies.model.DataAssets;
 import vald3nir.movies.model.Multimedia;
-import vald3nir.movies.control.RetrofitServices;
+import vald3nir.movies.rest.RetrofitServices;
+import vald3nir.movies.ui.multimedia.MultimediaActivity;
 
-public class MainDelegate {
+public class HomeDelegate {
 
     private RetrofitServices retrofitService;
-    private MainActivity mainActivity;
+    private HomeActivity homeActivity;
     private DataAssets dataAssets;
 
-    MainDelegate(MainActivity mainActivity) {
-        this.mainActivity = mainActivity;
+    HomeDelegate(HomeActivity homeActivity) {
+        this.homeActivity = homeActivity;
         this.retrofitService = new Retrofit.Builder()
                 .baseUrl("http://pbmedia.pepblast.com/pz_challenge/")
                 .addConverterFactory(GsonConverterFactory.create()).build()
@@ -30,7 +31,7 @@ public class MainDelegate {
 
     public void showDialog(Multimedia multimedia) {
 
-        AlertDialog alertDialog = new AlertDialog.Builder(mainActivity)
+        AlertDialog alertDialog = new AlertDialog.Builder(homeActivity)
 
                 .setMessage("Select an option:").setCancelable(false)
 
@@ -38,7 +39,7 @@ public class MainDelegate {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                         // call new activity
-                        MultimediaActivity.startActivity(mainActivity, multimedia, dataAssets.getAssetsLocation());
+                        MultimediaActivity.startActivity(homeActivity, multimedia, dataAssets.getAssetsLocation());
                     }
                 })
 
@@ -63,7 +64,7 @@ public class MainDelegate {
             public void onResponse(@NonNull Call<DataAssets> call, @NonNull Response<DataAssets> response) {
                 dataAssets = response.body();
                 if (dataAssets != null) {
-                    mainActivity.bind(dataAssets.getAssetsLocation(), dataAssets.getMultimedia());
+                    homeActivity.bind(dataAssets.getAssetsLocation(), dataAssets.getMultimedia());
                 }
             }
 
@@ -75,7 +76,7 @@ public class MainDelegate {
     }
 
     private void runDownloadMultimedia(Multimedia multimedia) {
-        final VideoDownloader videoDownloader = new VideoDownloader(mainActivity, multimedia.getVideo());
+        final VideoDownloader videoDownloader = new VideoDownloader(homeActivity, multimedia.getVideo());
         videoDownloader.execute(dataAssets.getAssetsLocation() + "/" + multimedia.getVideo());
     }
 }

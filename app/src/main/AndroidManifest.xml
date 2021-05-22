@@ -18,7 +18,7 @@
         android:theme="@style/AppTheme.NoActionBar"
         tools:targetApi="n">
         <activity
-            android:name="vald3nir.movies.views.MainActivity"
+            android:name="vald3nir.movies.ui.home.HomeActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,7 +27,7 @@
         </activity>
 
         <activity
-            android:name="vald3nir.movies.views.MultimediaActivity"
+            android:name="vald3nir.movies.ui.multimedia.MultimediaActivity"
             android:screenOrientation="portrait" />
 
     </application>
