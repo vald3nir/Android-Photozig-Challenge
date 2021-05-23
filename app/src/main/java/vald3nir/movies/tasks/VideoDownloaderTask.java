@@ -1,4 +1,4 @@
-package vald3nir.movies.rest;
+package vald3nir.movies.tasks;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -21,33 +21,25 @@ import java.net.URL;
  * Created by vald3nir on 13/12/17
  */
 
-public class VideoDownloader extends AsyncTask<String, Integer, String> implements DialogInterface.OnCancelListener {
+public class VideoDownloaderTask extends AsyncTask<String, Integer, String> implements DialogInterface.OnCancelListener {
 
     @SuppressLint("StaticFieldLeak")
     private final Context context;
-
     private PowerManager.WakeLock wakeLock;
-
-    private String fileName;
-
+    private final String fileName;
     private ProgressDialog progressDialog;
+    private IVideoDownloadCallback callback;
 
-    private VideoDownloadCallback callback;
-
-    //    ==========================================================================================
-
-    public VideoDownloader(Context context, String fileName) {
+    public VideoDownloaderTask(Context context, String fileName) {
         this.context = context;
         this.fileName = fileName;
     }
 
-    public VideoDownloader(Context context, String fileName, VideoDownloadCallback callback) {
+    public VideoDownloaderTask(Context context, String fileName, IVideoDownloadCallback callback) {
         this.context = context;
         this.fileName = fileName;
         this.callback = callback;
     }
-
-    //    ==========================================================================================
 
     @Override
     protected String doInBackground(String... sUrl) {
@@ -75,13 +67,12 @@ public class VideoDownloader extends AsyncTask<String, Integer, String> implemen
             input = connection.getInputStream();
             output = new FileOutputStream(Environment.getExternalStorageDirectory().getPath() + "/" + fileName);
 
-            byte data[] = new byte[4096];
+            byte[] data = new byte[4096];
             long total = 0;
             int count;
 
             while ((count = input.read(data)) != -1) {
                 // allow canceling with back button
-
                 if (isCancelled()) {
                     input.close();
                     return null;
@@ -117,7 +108,6 @@ public class VideoDownloader extends AsyncTask<String, Integer, String> implemen
         return null;
     }
 
-    //    ==========================================================================================
 
     @Override
     protected void onPreExecute() {
@@ -141,7 +131,6 @@ public class VideoDownloader extends AsyncTask<String, Integer, String> implemen
 
     }
 
-    //    ==========================================================================================
 
     @Override
     protected void onProgressUpdate(Integer... progress) {
@@ -151,7 +140,6 @@ public class VideoDownloader extends AsyncTask<String, Integer, String> implemen
         progressDialog.setProgress(progress[0]);
     }
 
-    //    ==========================================================================================
 
     @Override
     protected void onPostExecute(String result) {
@@ -171,7 +159,6 @@ public class VideoDownloader extends AsyncTask<String, Integer, String> implemen
         }
     }
 
-    //    ==========================================================================================
 
     @Override
     public void onCancel(DialogInterface dialog) {
@@ -187,5 +174,13 @@ public class VideoDownloader extends AsyncTask<String, Integer, String> implemen
         if (callback != null) {
             callback.notifyDownloadCanceled();
         }
+    }
+
+    public interface IVideoDownloadCallback {
+
+        void runMultimedia();
+
+        void notifyDownloadCanceled();
+
     }
 }

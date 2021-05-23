@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Videos</string>
+    <string name="select_an_option">Select an option:</string>
+    <string name="go_to_next_page">Go to next page</string>
+    <string name="download_video">Download video</string>
 </resources>

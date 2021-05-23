@@ -1,6 +1,7 @@
 package vald3nir.movies.ui.multimedia;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.media.AudioManager;
@@ -9,26 +10,25 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import vald3nir.movies.R;
-import vald3nir.movies.rest.VideoDownloadCallback;
-import vald3nir.movies.rest.VideoDownloader;
 import vald3nir.movies.model.Multimedia;
-import vald3nir.movies.ui.home.HomeActivity;
+import vald3nir.movies.tasks.VideoDownloaderTask;
 
-public class MultimediaActivity extends AppCompatActivity implements VideoDownloadCallback {
+public class MultimediaActivity extends AppCompatActivity implements VideoDownloaderTask.IVideoDownloadCallback {
 
     Multimedia multimedia; // get multimedia from list (Intent)
     String baseUrl;
@@ -44,11 +44,11 @@ public class MultimediaActivity extends AppCompatActivity implements VideoDownlo
     private int currentRuntime = 0;
     private String pathFileVideo;
 
-    public static void startActivity(HomeActivity homeActivity, Multimedia multimedia, String assetsLocation) {
-        Intent intent = new Intent(homeActivity, MultimediaActivity.class);
+    public static void startActivity(Activity activity, Multimedia multimedia, String assetsLocation) {
+        Intent intent = new Intent(activity, MultimediaActivity.class);
         intent.putExtra("multimedia", multimedia);
         intent.putExtra("assetsLocation", assetsLocation);
-        homeActivity.startActivity(intent);
+        activity.startActivity(intent);
     }
 
     @Override
@@ -94,10 +94,10 @@ public class MultimediaActivity extends AppCompatActivity implements VideoDownlo
 
         int duration = mediaPlayerAudio.getDuration();
         long minutes = TimeUnit.MILLISECONDS.toMinutes((long) duration);
-        long secords = TimeUnit.MILLISECONDS.toSeconds((long) duration) -
+        long seconds = TimeUnit.MILLISECONDS.toSeconds((long) duration) -
                 TimeUnit.MINUTES.toSeconds(minutes);
 
-        timeTotalTextview.setText(String.format("%d:%d", minutes, secords));
+        timeTotalTextview.setText(String.format("%d:%d", minutes, seconds));
         seekBar.setMax(duration);
         seekBar.setProgress(currentRuntime);
     }
@@ -164,7 +164,7 @@ public class MultimediaActivity extends AppCompatActivity implements VideoDownlo
         } else {
 
             /* run download the video*/
-            final VideoDownloader downloadTask = new VideoDownloader(this, multimedia.getVideo(), this);
+            final VideoDownloaderTask downloadTask = new VideoDownloaderTask(this, multimedia.getVideo(), this);
             downloadTask.execute(baseUrl + "/" + multimedia.getVideo());
         }
     }

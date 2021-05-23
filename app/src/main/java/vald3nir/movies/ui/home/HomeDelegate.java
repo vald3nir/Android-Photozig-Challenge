@@ -1,82 +1,43 @@
 package vald3nir.movies.ui.home;
 
-import android.content.DialogInterface;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
+import android.content.Context;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-import vald3nir.movies.rest.VideoDownloader;
+import java.util.Collection;
+
 import vald3nir.movies.model.DataAssets;
 import vald3nir.movies.model.Multimedia;
-import vald3nir.movies.rest.RetrofitServices;
-import vald3nir.movies.ui.multimedia.MultimediaActivity;
+import vald3nir.movies.rest.RetrofitClient;
+import vald3nir.movies.tasks.VideoDownloaderTask;
 
 public class HomeDelegate {
 
-    private RetrofitServices retrofitService;
-    private HomeActivity homeActivity;
+    private final RetrofitClient client;
+    private final IHomeDelegate listener;
     private DataAssets dataAssets;
 
-    HomeDelegate(HomeActivity homeActivity) {
-        this.homeActivity = homeActivity;
-        this.retrofitService = new Retrofit.Builder()
-                .baseUrl("http://pbmedia.pepblast.com/pz_challenge/")
-                .addConverterFactory(GsonConverterFactory.create()).build()
-                .create(RetrofitServices.class);
+    public HomeDelegate(IHomeDelegate listener) {
+        this.listener = listener;
+        this.client = new RetrofitClient();
     }
 
-    public void showDialog(Multimedia multimedia) {
 
-        AlertDialog alertDialog = new AlertDialog.Builder(homeActivity)
-
-                .setMessage("Select an option:").setCancelable(false)
-
-                .setPositiveButton("Go to next page", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                        // call new activity
-                        MultimediaActivity.startActivity(homeActivity, multimedia, dataAssets.getAssetsLocation());
-                    }
-                })
-
-                .setNegativeButton("Donwload Video", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                        runDownloadMultimedia(multimedia);
-                    }
-                })
-
-                .create();
-
-        alertDialog.show();
-        alertDialog.setCanceledOnTouchOutside(true);
-    }
-
-    public void listMultimediaConfiguration() {
-
-
-        this.retrofitService.getData().enqueue(new Callback<DataAssets>() {
-            @Override
-            public void onResponse(@NonNull Call<DataAssets> call, @NonNull Response<DataAssets> response) {
-                dataAssets = response.body();
-                if (dataAssets != null) {
-                    homeActivity.bind(dataAssets.getAssetsLocation(), dataAssets.getMultimedia());
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<DataAssets> call, @NonNull Throwable t) {
-                t.printStackTrace();
-            }
+    public void listMultimedia() {
+        client.listMultimedias(dataAssets -> {
+            this.dataAssets = dataAssets;
+            listener.bindAdapter(dataAssets.getAssetsLocation(), dataAssets.getMultimedia());
         });
     }
 
-    private void runDownloadMultimedia(Multimedia multimedia) {
-        final VideoDownloader videoDownloader = new VideoDownloader(homeActivity, multimedia.getVideo());
-        videoDownloader.execute(dataAssets.getAssetsLocation() + "/" + multimedia.getVideo());
+    public void downloadMultimedia(Context context, Multimedia multimedia) {
+        new VideoDownloaderTask(context, multimedia.getVideo())
+                .execute(dataAssets.getAssetsLocation() + "/" + multimedia.getVideo());
+    }
+
+    public String getAssetsLocation() {
+        return dataAssets.getAssetsLocation();
+    }
+
+    public interface IHomeDelegate {
+        void bindAdapter(String assetsLocation, Collection<Multimedia> multimedia);
     }
 }
