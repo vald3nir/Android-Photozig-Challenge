@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Videos</string>
+    <string name="feed">Feed</string>
     <string name="select_an_option">Select an option:</string>
-    <string name="go_to_next_page">Go to next page</string>
+    <string name="see_video">See Video</string>
     <string name="download_video">Download video</string>
+    <string name="download_video_error">Download video error</string>
+    <string name="load_feed_fail">Load Feed Fail</string>
 </resources>
