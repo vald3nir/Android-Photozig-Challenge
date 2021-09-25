@@ -1,26 +1,28 @@
 # Programming Challenge for Android Developers
 
-## Installation
+An example project of an application that lists a set of videos on a feed screen, with options for viewing and downloading the selected video.
 
-List of libraries and frameworks used to develop the challenge. Both were configured correctly in version 3.0.1 and compiled with the Android SDK version 28.
+## Architecture used
 
 
-## **1. RETROFIT**
+## Libraries used:
 
+### RETROFIT
 Type-safe HTTP client for Android and Java by Square, Inc.
 
 Link: https://github.com/square/retrofit
 
-
-## **2. PICASSO**
-
+### PICASSO
 A powerful image downloading and caching library for Android
 
 Link: https://github.com/square/picasso
 
+## PRDownloader
+A file downloader library for Android with pause and resume support
 
-## **4. GOOGLE GSON**
+Link: https://github.com/MindorksOpenSource/PRDownloader
 
-Gson is a Java library that can be used to convert Java Objects into their JSON representation. It can also be used to convert a JSON string to an equivalent Java object. Gson can work with arbitrary Java objects including pre-existing objects that you do not have source-code of.
+## ExoPlayer
+An extensible media player for Android
 
-Link: https://github.com/google/gson
+Link: https://github.com/google/ExoPlayer
