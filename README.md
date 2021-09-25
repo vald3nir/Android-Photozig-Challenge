@@ -4,6 +4,7 @@ An example project of an application that lists a set of videos on a feed screen
 
 ## Architecture used
 
+![download](https://user-images.githubusercontent.com/23506996/134785861-bcf68ad5-43a6-4986-83e8-1ba23c12082d.png)
 
 ## Libraries used:
 
